@@ -1,0 +1,1 @@
+go build -o unluac_tool.exe main.go

@@ -9,8 +9,18 @@ import (
 	"path/filepath"
 )
 
+var g_inpath string
+var g_outpath string
+
 func main() {
-	err := filepath.Walk(".\\script\\", visit)
+	if len(os.Args) < 3 {
+		fmt.Println("useful: unluac_tool.exe srcPath outPath")
+		return
+	}
+
+	g_inpath = os.Args[1]
+	g_outpath = os.Args[2]
+	err := filepath.Walk(g_inpath, visit)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -20,8 +30,10 @@ func visit(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("path = " + path)
-	newPath := "dec_out\\" + path
+	inpathLen := len(g_inpath)
+	subPath := path[inpathLen:]
+	newPath := g_outpath + subPath
+	fmt.Println("decode_lua: " + newPath)
 	if info.IsDir() {
 		os.MkdirAll(newPath, os.ModePerm)
 		return nil
